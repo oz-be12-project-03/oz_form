@@ -7,21 +7,20 @@ from config import db
 questions_blp = Blueprint("questions", __name__)
 
 # 질문 단건 조회
-@questions_blp.route("/questions/<int:question_id>", methods=["GET"])
-def get_question_by_id(question_id):
+@questions_blp.route("/questions/<int:question_sqe>", methods=["GET"])
+def get_question_by_id(question_sqe):
     try:
-        question = Question.query.filter_by(id=question_id).first()
+        question = Question.query.filter_by(sqe=question_sqe, is_active=True).first()
         
         if not question:
             return jsonify({"message": "질문을 찾을 수 없습니다."}), 404
 
         response = {
-            "id": question.id,
             "title": question.title,
             "sqe": question.sqe,
-            "image_id": question.image_id,
         }
-        return jsonify(question), 200
+        
+        return jsonify(response), 200
     
         image = Image.query.get(question.image_id)
         choice_list = (
