@@ -10,11 +10,19 @@ questions_blp = Blueprint("questions", __name__)
 @questions_blp.route("/questions/<int:question_id>", methods=["GET"])
 def get_question_by_id(question_id):
     try:
-        question = Question.query.filter_by(id=question_id, is_active=True).first()
-        return jsonify(question), 200
+        question = Question.query.filter_by(id=question_id).first()
+        
         if not question:
             return jsonify({"message": "질문을 찾을 수 없습니다."}), 404
 
+        response = {
+            "id": question.id,
+            "title": question.title,
+            "sqe": question.sqe,
+            "image_id": question.image_id,
+        }
+        return jsonify(question), 200
+    
         image = Image.query.get(question.image_id)
         choice_list = (
             Choice.query.filter_by(question_id=question.id, is_active=True)
