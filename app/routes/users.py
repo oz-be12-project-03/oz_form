@@ -4,9 +4,13 @@ from config import db
 
 users_blp = Blueprint("users", __name__)
 
+@users_blp.route("/", methods=["GET"])
+def connect():
+    if request.method == "GET":
+        return jsonify({"message": "Success Connect"})
+    
 # 사용자 생성
 @users_blp.route("/signup", methods=["POST"])
-
 def create_user():
     data = request.get_json()
 
