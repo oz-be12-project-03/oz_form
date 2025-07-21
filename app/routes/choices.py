@@ -3,10 +3,10 @@ from app.models import Choice
 from flask import Blueprint, request, jsonify
 
 # 블루프린트 생성
-choices_blp = Blueprint('choice', __name__, url_prefix='/choice')
+choices_blp = Blueprint('choices', __name__, url_prefix='/choice')
 
 # POST: 선택지 생성
-@choices_blp.route('/', methods=['POST'])
+@choices_blp.route('/choice', methods=['POST'])
 
 def create_choice():
     data = request.get_json()

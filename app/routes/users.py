@@ -5,7 +5,7 @@ from config import db
 users_blp = Blueprint("users", __name__)
 
 # 사용자 생성
-@users_blp.route("/users", methods=["POST"])
+@users_blp.route("/users/signup", methods=["POST"])
 
 def create_user():
     data = request.get_json()
@@ -26,7 +26,7 @@ def create_user():
     db.session.add(new_user)
     db.session.commit()
 
-    return jsonify({"message": "사용자가 생성되었습니다.", "user_id": new_user.id}), 201
+    return jsonify({"message": new_user.name + "님 회원가입을 축하합니다", "user_id": new_user.id}), 201
 
 # 전체 사용자 조회
 @users_blp.route("/users", methods=["GET"])
