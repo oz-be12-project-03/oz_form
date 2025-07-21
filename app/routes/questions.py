@@ -9,22 +9,39 @@ questions_blp = Blueprint("questions", __name__)
 # 질문 단건 조회
 @questions_blp.route("/question/<int:question_sqe>", methods=["GET"])
 def get_question_by_id(question_sqe):
-    question = Question.query.filter_by(sqe=question_sqe, is_active=True).first()
-    if not question:
-        return jsonify({"message": "질문을 찾을 수 없습니다."}), 404
+    try:
+        question = Question.query.filter_by(sqe=question_sqe, is_active=True).first()
+        if not question:
+            return jsonify({"message": "질문을 찾을 수 없습니다."}), 404
 
-    image = Image.query.get(question.image_id)
-    choice_list = (
-        Choice.query.filter_by(question_id=question.id, is_active=True)
-        .order_by(Choice.sqe)
-        .all()
-    )
+        image = Image.query.get(question.image_id)
+        choice_list = (
+            Choice.query.filter_by(question_id=question.id, is_active=True)
+            .order_by(Choice.sqe)
+            .all()
+        )
+        if not choice_list:
+            return jsonify({"message": "선택지를 찾을 수 없습니다."}), 404  
+        if not image:
+            return jsonify({"message": "이미지를 찾을 수 없습니다."}), 404
 
-    return jsonify({
+        response = {
             "title": question.title,
             "image": image.url if image else None,
-            "choices": [choice.to_dict() for choice in choice_list],
-    }), 200
+            "choices": [
+                {
+                    "id": c.id,
+                    "content": c.content,
+                    "sqe": c.sqe,
+                    "is_active": c.is_active
+                } for c in choice_list
+            ],
+        }
+
+        return jsonify(response), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 # 질문 수 조회
 @questions_blp.route("/questions/count", methods=["GET"])
