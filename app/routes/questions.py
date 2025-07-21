@@ -26,7 +26,6 @@ def get_question_by_id(question_sqe):
         "image": image.url if image else None,
         "is_active": question.is_active,
         "sqe": question.sqe,
-        "choices": [choice.to_dict() for choice in choice_list],
     }), 200
 
 # 질문 수 조회
