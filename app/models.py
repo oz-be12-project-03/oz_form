@@ -3,7 +3,7 @@ from sqlalchemy import Enum
 from config import db
 
 class User(db.Model):
-    __tablename__ = 'user'
+    __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(10), nullable=False)
@@ -30,7 +30,7 @@ class Answer(db.Model):
     
 
 class Choice(db.Model):
-    __tablename__ = 'choice'
+    __tablename__ = 'choices'
 
     id = db.Column(db.Integer, primary_key=True)
     question_id = db.Column(db.Integer, db.ForeignKey('questions.id'), nullable=False)
