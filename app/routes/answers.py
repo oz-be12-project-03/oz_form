@@ -1,23 +1,36 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 from config import db
 from app.models import Answer
 
-answers_blp = Blueprint("answer", __name__)
+answers_blp = Blueprint("answers", __name__)
 
-@answers_blp.route("/answer", methods=["POST"])
-def get_answers():
+@answers_blp.route("/submit", methods=["POST"])
+def submit_answers():
     try:
-        answers = Answer.query.all()
-        result = [
-            {
-                "id": a.id,
-                "user_id": a.user_id,
-                "choice_id": a.choice_id,
-                "created_at": a.created_at.isoformat(),
-                "update_at": a.update_at.isoformat()
-            }
-            for a in answers
-        ]
-        return jsonify(result), 200
+        data = request.get_json()
+
+        if not isinstance(data, list):
+            return jsonify({"message": "리스트 형식의 JSON 데이터를 보내주세요."}), 400
+
+        new_answers = []
+        user_id_set = set()
+
+        for item in data:
+            user_id = item.get("user_id")
+            choice_id = item.get("choice_id")
+
+            if user_id is None or choice_id is None:
+                return jsonify({"message": "user_id와 choice_id는 필수입니다."}), 400
+
+            answer = Answer(user_id=user_id, choice_id=choice_id)
+            db.session.add(answer)
+            new_answers.append(answer)
+            user_id_set.add(user_id)
+
+        db.session.commit()
+
+        return jsonify({"message": f"User: {list(user_id_set)[0]}'s answers Success Create"}), 201
+
     except Exception as e:
+        db.session.rollback()
         return jsonify({"error": str(e)}), 500
