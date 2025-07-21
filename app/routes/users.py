@@ -5,7 +5,7 @@ from config import db
 users_blp = Blueprint("users", __name__)
 
 # 사용자 생성
-@users_blp.route("/users/signup", methods=["POST"])
+@users_blp.route("/signup", methods=["POST"])
 
 def create_user():
     data = request.get_json()
