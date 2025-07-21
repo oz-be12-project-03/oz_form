@@ -5,8 +5,6 @@ from config import db
 
 migrate = Migrate()
 
-main_blp = Blueprint("main", __name__)
-
 def create_app():
 	application = Flask(__name__)
 	application.config.from_object("config.Config")
