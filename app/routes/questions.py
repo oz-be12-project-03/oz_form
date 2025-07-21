@@ -11,6 +11,7 @@ questions_blp = Blueprint("questions", __name__)
 def get_question_by_id(question_id):
     try:
         question = Question.query.filter_by(id=question_id, is_active=True).first()
+        return jsonify(question), 200
         if not question:
             return jsonify({"message": "질문을 찾을 수 없습니다."}), 404
 
