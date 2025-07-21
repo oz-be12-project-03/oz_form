@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from datetime import datetime
 
-from app.models import Question, Image
+from app.models import Question, Image, Choice
 from config import db
 
 questions_blp = Blueprint("questions", __name__)
@@ -13,20 +13,20 @@ def get_question_by_id(question_sqe):
     if not question:
         return jsonify({"message": "질문을 찾을 수 없습니다."}), 404
 
+    image = Image.query.get(question.image_id)
+    choice_list = (
+        Choice.query.filter_by(question_id=question.id, is_active=True)
+        .order_by(Choice.sqe)
+        .all()
+    )
+
     return jsonify({
         "id": question.id,
         "title": question.title,
-        "image_url": question.image.url if question.image else None,
+        "image": image.url if image else None,
         "is_active": question.is_active,
         "sqe": question.sqe,
-        "choices": [
-            {
-                "id": choice.id,
-                "content": choice.content,
-                "sqe": choice.sqe,
-                "is_active": choice.is_active
-            } for choice in question.choices
-        ]
+        "choices": [choice.to_dict() for choice in choice_list],
     }), 200
 
 # 질문 수 조회
