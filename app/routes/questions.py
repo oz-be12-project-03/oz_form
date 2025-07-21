@@ -7,7 +7,7 @@ from config import db
 questions_blp = Blueprint("questions", __name__)
 
 # 질문 단건 조회
-@questions_blp.route("/question/<int:question_id>", methods=["GET"])
+@questions_blp.route("/questions/<int:question_id>", methods=["GET"])
 def get_question_by_id(question_id):
     try:
         question = Question.query.filter_by(id=question_id, is_active=True).first()
