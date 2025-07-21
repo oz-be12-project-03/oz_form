@@ -9,7 +9,7 @@ questions_blp = Blueprint("questions", __name__)
 # 질문 단건 조회
 @questions_blp.route("/question/<int:question_sqe>", methods=["GET"])
 def get_question_by_id(question_sqe):
-    question = Question.query.get(question_sqe)
+    question = Question.query.filter_by(sqe=question_sqe, is_active=True).first()
     if not question:
         return jsonify({"message": "질문을 찾을 수 없습니다."}), 404
 
@@ -21,11 +21,9 @@ def get_question_by_id(question_sqe):
     )
 
     return jsonify({
-        "id": question.id,
-        "title": question.title,
-        "image": image.url if image else None,
-        "is_active": question.is_active,
-        "sqe": question.sqe,
+            "title": question.title,
+            "image": image.url if image else None,
+            "choices": [choice.to_dict() for choice in choice_list],
     }), 200
 
 # 질문 수 조회
