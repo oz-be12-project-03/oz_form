@@ -15,13 +15,6 @@ def get_question_by_id(question_sqe):
         if not question:
             return jsonify({"message": "질문을 찾을 수 없습니다."}), 404
 
-        response = {
-            "title": question.title,
-            "sqe": question.sqe,
-        }
-
-        return jsonify(response), 200
-    
         image = Image.query.get(question.image_id)
         choice_list = (
             Choice.query.filter_by(question_id=question.id, is_active=True)
