@@ -89,17 +89,7 @@ oz_form/
 
 📌 엔드포인트 요약
 
-| 기능 | Method | 라우터 | 설명 |
-| ---- | ------ | ------ | ---- |
+📡 API 엔드포인트 요약
 
-사용자 생성 post /users name, age, gender, email
-전체 사용자 조회 get /users
-특정 사용자 조회 get /users/<int:id>
 
-| 전체 질문 조회 | GET | `/questions` | 전체 질문 목록을 반환 |
-| 단일 질문 조회 | GET | `/question/<int:id>` | 특정 ID 기준으로 질문 데이터를 반환 |
-| 질문 수 조회 | GET | `/questions/count` | 활성화된 질문의 총 개수를 반환 |
-| 질문 생성 | POST | `/question` title, sqe, image_id, is_active | 새로운 질문을 생성 |
 
-이미지 생성 post /images url, type
-이미지 조회 get /image/main
