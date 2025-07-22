@@ -19,7 +19,7 @@ def get_question_by_id(question_sqe):
             "title": question.title,
             "sqe": question.sqe,
         }
-        
+
         return jsonify(response), 200
     
         image = Image.query.get(question.image_id)
@@ -92,3 +92,26 @@ def create_question():
 
     except KeyError as e:
         return jsonify({"message": f"필드 누락: {str(e)}"}), 400
+
+@questions_blp.route("/questions", methods=["GET"])
+def get_all_questions():
+    try:
+        questions = db.session.query(Question).filter_by(is_active=True).all()
+        
+        result = []
+        for q in questions:
+            result.append({
+                "id": q.id,
+                "image_id": q.image_id,
+                "title": q.title,
+                "sqe": q.sqe,
+                "is_active": q.is_active,
+                "created_at": q.created_at.isoformat() if q.created_at else None,
+                "updated_at": q.updated_at.isoformat() if q.updated_at else None
+            })
+        
+        return jsonify(result), 200
+
+    except Exception as e:
+        print("에러 발생:", e)
+        return jsonify({"message": "서버 내부 오류"}), 500
