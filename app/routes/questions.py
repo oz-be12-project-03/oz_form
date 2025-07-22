@@ -96,7 +96,7 @@ def create_question():
 @questions_blp.route("/questions", methods=["GET"])
 def get_all_questions():
     try:
-        questions = db.session.query(Question).filter_by(is_active=True).all()
+        questions = db.session.query(Question).all()
         
         result = []
         for q in questions:
@@ -105,13 +105,10 @@ def get_all_questions():
                 "image_id": q.image_id,
                 "title": q.title,
                 "sqe": q.sqe,
-                "is_active": q.is_active,
-                "created_at": q.created_at.isoformat() if q.created_at else None,
-                "updated_at": q.updated_at.isoformat() if q.updated_at else None
             })
         
         return jsonify(result), 200
 
     except Exception as e:
         print("에러 발생:", e)
-        return jsonify({"message": "서버 내부 오류"}), 500
+        return jsonify({"message": "서버 내부 오류" + e}), 500
